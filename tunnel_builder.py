@@ -18,6 +18,7 @@ class TunnelBuilder:
         self._endpoint_ip: str = getenv("ENDPOINT_IP", endpoint_ip)
         self._forward_ports: list = [22, 443]
         self.tunnel: SSHTunnelForwarder = self.create_tunnel()
+        self.tunnel.start()
 
     # bastion_ip getter and setter
     @property

@@ -1,12 +1,38 @@
 #! /usr/bin/env python3
 """ Executor for the remote tunnel. """
-from sshtunnel import SSHTunnelForwarder
+import logging
+import signal
+import sys
+import time
+
 from tunnel_builder import TunnelBuilder
+
+tunnel: TunnelBuilder = TunnelBuilder()
+Log_Format = "%(levelname)s %(asctime)s - %(message)s"
+
+logging.basicConfig(stream=sys.stdout,
+                    filemode="w",
+                    format=Log_Format,
+                    level=logging.INFO)
+
+
+def signal_handler(signal, frame) -> None:
+    tunnel.destroy_tunnel()
+    print("Program exited gracefully")
+    sys.exit(0)
 
 
 if __name__ == "__main__":
-
-    tunnelbuilder_to_ssh: TunnelBuilder = TunnelBuilder()
-    tunnel_to_ssh: SSHTunnelForwarder = tunnelbuilder_to_ssh.create_tunnel()
-
-    # tunnel_to_https = TunnelBuilder(endpoint_port=443, local_bind_port=443)
+    if tunnel.tunnel.is_alive:
+        print(f'Tunnel through {tunnel.bastion_ip} to {tunnel.endpoint_ip} is active.')
+        print('Ctrl-C to stop.')
+    else:
+        raise ConnectionError(f'Tunnel through {tunnel.bastion_ip} to {tunnel.endpoint_ip} failed.')
+    while tunnel.tunnel.is_alive:
+        try:
+            time.sleep(5)
+        except KeyboardInterrupt:
+            print('Closing down tunnel and exiting.')
+            signal.signal(signal.SIGINT, signal_handler)
+            break
+    raise ConnectionError(f'Tunnel through {tunnel.bastion_ip} to {tunnel.endpoint_ip} failed.')
