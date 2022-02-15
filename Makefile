@@ -13,10 +13,10 @@ help: ## This help.
 # DOCKER/PODMAN TASKS
 # Build the container
 build: ## Build the container.
-	${container_cli} build . -t ${app_name}:${version}
+	sudo ${container_cli} build . -t ${app_name}:${version}
 
 build-nc: ## Build the container without caching.
-	${container_cli} build --no-cache -t ${app_name}:${version}
+	sudo ${container_cli} build --no-cache -t ${app_name}:${version}
 
 create-network: ## Creates the podman macvlan network on the system's HMN (or local eth0 if testing locally.)
 	sudo ${container_cli} network create -d macvlan -o parent=${LOCAL_MACVLAN_FROM} remote_hardware_tunnel
@@ -25,8 +25,8 @@ create-sls-entry: ## Adds the new xname in SLS
 	echo "TODO: add cray sls command to add the node ${ENDPOINT_XNAME}"
 
 run-dev: ## Mount this directory into the container and shell in the container interactively.
-	${container_cli} run -it --env-file=$(config) -P --entrypoint=/bin/ash --volume .:/opt/cray \
+	sudo ${container_cli} run -it --env-file=$(config) -P --entrypoint=/bin/ash --volume .:/opt/cray \
 		--network remote_hardware_tunnel -p 22:22/tcp -p 443:443/tcp -h ${ENDPOINT_XNAME} ${app_name}:${version}
 
 run: ## Run the container
-	${container_cli} run --env-file=$(config) -P --network remote_hardware_tunnel -p 22:22/tcp -p 443:443/tcp -h ${ENDPOINT_XNAME} ${app_name}
+	sudo ${container_cli} run --env-file=$(config) -P --network remote_hardware_tunnel -p 22:22/tcp -p 443:443/tcp -h ${ENDPOINT_XNAME} ${app_name}
