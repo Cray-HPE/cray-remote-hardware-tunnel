@@ -1,8 +1,6 @@
-<<<<<<< HEAD
-# cray-remote-hardware-tunnel
-Expose a remote environments hardware endpoint into a local environment.
-=======
 # Cray Remote Hardware Tunnel
+Expose a remote environment's hardware endpoint into a local environment via SSH tunnel.
+
 The remote hardware tunnel is useful for testing hardware in another environment from a local CSM instance, e.g. a local dev environment or a TDS. The tunnel requires an accessible SSH endpoint to serve as a bastion host. It exposes the remote hardware's ports 22 and 443 as a local podman container with a MacVLAN interface on the HMN network.
 
 | Local TDS | ----> | Remote M001 or SSH Endpoint | ----> | Hardware |
@@ -26,4 +24,4 @@ Run the same steps as above but use `make config=[your.env] run-dev` instead for
 - Add `make test` and CI pipeline.
 - Add the SLS command to add the node.
 - Finish the `make create-network` command
->>>>>>> 792708a (Stubs out podman network and SLS steps. Adds a readme.)
+
