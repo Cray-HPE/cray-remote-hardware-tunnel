@@ -26,7 +26,7 @@ create-sls-entry: ## Adds the new xname in SLS
 
 run-dev: ## Mount this directory into the container and shell in the container interactively.
 	sudo ${container_cli} run -it --env-file=$(config) -P --entrypoint=/bin/ash --volume .:/opt/cray \
-		--network remote_hardware_tunnel -p 22:22/tcp -p 443:443/tcp -h ${ENDPOINT_XNAME} ${app_name}:${version}
+		--network remote_hardware_tunnel -h ${ENDPOINT_XNAME} ${app_name}:${version}
 
 run: ## Run the container
-	sudo ${container_cli} run --env-file=$(config) -P --network remote_hardware_tunnel -p 22:22/tcp -p 443:443/tcp -h ${ENDPOINT_XNAME} ${app_name}
+	sudo ${container_cli} run --env-file=$(config) -P --network remote_hardware_tunnel -h ${ENDPOINT_XNAME} ${app_name}
