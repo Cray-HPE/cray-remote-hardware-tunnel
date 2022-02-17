@@ -25,8 +25,13 @@ create-sls-entry: ## Adds the new xname in SLS
 	echo "TODO: add cray sls command to add the node ${ENDPOINT_XNAME}"
 
 run-dev: ## Mount this directory into the container and shell in the container interactively.
-	sudo ${container_cli} run -it --env-file=$(config) -P --entrypoint=/bin/ash --volume .:/opt/cray \
-		--network remote_hardware_tunnel -h ${ENDPOINT_XNAME} ${app_name}:${version}
+	sudo ${container_cli} run -it --env-file=$(config) --entrypoint=/bin/ash --volume .:/opt/cray \
+		--network remote_hardware_tunnel -h ${ENDPOINT_XNAME} --name tunnel_to_${ENDPOINT_XNAME} ${app_name}:${version}
 
 run: ## Run the container
-	sudo ${container_cli} run --env-file=$(config) -P --network remote_hardware_tunnel -h ${ENDPOINT_XNAME} ${app_name}
+	sudo ${container_cli} run --env-file=$(config) -d --network remote_hardware_tunnel \
+		-h ${ENDPOINT_XNAME} --name tunnel_to_${ENDPOINT_XNAME} ${app_name}; \
+	sudo podman inspect tunnel_to_${ENDPOINT_XNAME} | grep IPAddress
+
+remove-container:
+	sudo podman rm tunnel_to_${ENDPOINT_XNAME}
