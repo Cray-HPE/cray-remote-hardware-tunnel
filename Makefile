@@ -33,5 +33,5 @@ run: ## Run the container
 		-h ${ENDPOINT_XNAME} --name tunnel_to_${ENDPOINT_XNAME} ${app_name}; \
 	sudo podman inspect tunnel_to_${ENDPOINT_XNAME} | grep IPAddress
 
-remove-container:
-	sudo podman rm tunnel_to_${ENDPOINT_XNAME}
+rm-container: ## Removes the podman container.
+	sudo podman rm -f tunnel_to_${ENDPOINT_XNAME}
