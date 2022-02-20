@@ -3,3 +3,6 @@ venv
 .idea
 test.env
 *.env
+nohup.out
+*.swp
+.vscode/
