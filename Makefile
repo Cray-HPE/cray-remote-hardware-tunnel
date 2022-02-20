@@ -4,6 +4,9 @@ config ?= .env
 include $(config)
 export $(shell sed 's/=.*//' $(config))
 
+IMAGE_NAME ?= cray-remote-hardware-tunnel
+VERSION ?= $(shell cat .version)
+
 .PHONY: help
 help: ## This help.
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
@@ -13,10 +16,10 @@ help: ## This help.
 # DOCKER/PODMAN TASKS
 # Build the container
 build: ## Build the container.
-	sudo ${container_cli} build . -t ${image_name}:${version}
+	sudo ${container_cli} build . -t ${IMAGE_NAME}:${VERSION}
 
 build-nc: ## Build the container without caching.
-	sudo ${container_cli} build --no-cache -t ${image_name}:${version}
+	sudo ${container_cli} build --no-cache -t ${IMAGE_NAME}:${VERSION}
 
 clean: ## Stops the container and dhcp client. Deletes the container and macvlan network.
 	make config=$(config) delete-network rm-container
@@ -47,11 +50,11 @@ pull-container: ## Pulls the container down from algol60
 
 run-dev: ## Mount this directory into the container and shell in the container interactively.
 	sudo ${container_cli} run -it --env-file=$(config) --entrypoint=/bin/ash --volume .:/opt/cray \
-		--network remote_hardware_tunnel -h ${ENDPOINT_XNAME} --name tunnel_to_${ENDPOINT_XNAME} ${image_name}:${version}
+		--network remote_hardware_tunnel -h ${ENDPOINT_XNAME} --name tunnel_to_${ENDPOINT_XNAME} ${IMAGE_NAME}:${VERSION}
 
 run: ## Run the container
 	sudo ${container_cli} run --env-file=$(config) -d --network remote_hardware_tunnel \
-		-h ${ENDPOINT_XNAME} --name tunnel_to_${ENDPOINT_XNAME} ${image_name}; \
+		-h ${ENDPOINT_XNAME} --name tunnel_to_${ENDPOINT_XNAME} ${IMAGE_NAME}; \
 	sudo podman inspect tunnel_to_${ENDPOINT_XNAME} | grep IPAddress
 
 rm-container: ## Removes the podman container.
