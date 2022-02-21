@@ -5,6 +5,7 @@ include $(config)
 export $(shell sed 's/=.*//' $(config))
 
 export IMAGE_NAME ?= cray-remote-hardware-tunnel
+export IMAGE_REPO ?= localhost
 export VERSION ?= $(shell cat .version)
 
 .PHONY: help
