@@ -6,11 +6,13 @@ The remote hardware tunnel is useful for testing hardware in another environment
 | Local TDS | ----> | Remote M001 or SSH Endpoint | ----> | Hardware |
 
 ## Getting Started
-1. Clone the repo to the local TDS on m001 or a node that has network access to the remote environment.
-1. Copy and edit the .env file to contain the necessary connection parameters for the SSH connection.
+You will need the makefile and .env file in this repo on the local environment. The easiest way to proceed is by downloading a copy of the repo.
+1. Download this repo to a local node with ip access to the bastion using 
+    `wget https://github.com/Cray-HPE/cray-remote-hardware-tunnel/archive/refs/heads/main.tar.gz && tar -xvf main.tar.gz`
+1. Copy and edit the .env file to contain the necessary connection parameters for the SSH connection and desired endpoint.
 1. Run `make config=[your.env] up`.
-1. Confirm the endpoint is in HSM and Kea has provided a DHCP reservation.
-1. Test CSM services against the remote hardware.
+1. Confirm the endpoint is in HSM and Kea has provided a DHCP reservation. # TODO: Add commands that add node to CSM.
+1. Test CSM services against the remote hardware. # TODO: Add integration test suite.
 
 ## Cleaning Up
 When testing is complete, run `make config=[your.env] clean`.
